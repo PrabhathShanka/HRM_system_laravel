@@ -7,26 +7,27 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    public $departments;
+    public $department;
 
     public function rules()
     {
         return [
-            'departments.name' => 'required|string|max:255',
+            'department.name' => 'required|string|max:255',
         ];
     }
 
     public function mount()
     {
-        $this->departments = new Department();
+        $this->department = new Department();
     }
 
     public function save()
     {
         $this->validate();
-        $this->departments->save();
+        $this->department->company_id = session('company_id');
+        $this->department->save();
         session()->flash('message', 'Department created successfully');
-        return $this->redirectIntended('departments.index');
+        return $this->redirectIntended(route('departments.index'), true);
     }
 
     public function render()

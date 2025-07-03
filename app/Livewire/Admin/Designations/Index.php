@@ -14,12 +14,12 @@ class Index extends Component
     public function delete($id)
     {
         Designation::find($id)->delete();
-        session()->flash('message', 'Designation deleted successfully');
+        session()->flash('success', 'Designation deleted successfully');
     }
     public function render()
     {
         return view('livewire.admin.designations.index',[
-            'designations' => Designation::latest()->paginate(10),
+            'designations' => Designation::inCompany()->latest()->paginate(10),
         ]);
     }
 }

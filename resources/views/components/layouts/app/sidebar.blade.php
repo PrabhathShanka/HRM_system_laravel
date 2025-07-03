@@ -4,7 +4,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-nos-700 dark:bg-nos-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
             <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
@@ -15,9 +15,60 @@
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                 </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Companies')" class="grid">
+                    <flux:navlist.item icon="building-office" :href="route('companies.index')" :current="request()->routeIs('companies.index')" wire:navigate>{{ __('List of Companies') }}</flux:navlist.item>
+                    <flux:navlist.item icon="plus" :href="route('companies.create')" :current="request()->routeIs('companies.create')" wire:navigate>{{ __('Create a Company') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Departments')" class="grid">
+                    <flux:navlist.item icon="users" :href="route('departments.index')" :current="request()->routeIs('departments.index')" wire:navigate>{{ __('List of Departments') }}</flux:navlist.item>
+                    <flux:navlist.item icon="plus" :href="route('departments.create')" :current="request()->routeIs('departments.create')" wire:navigate>{{ __('Create a Department') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Designations')" class="grid">
+                    <flux:navlist.item icon="users" :href="route('designations.index')" :current="request()->routeIs('designations.index')" wire:navigate>{{ __('List of Designations') }}</flux:navlist.item>
+                    <flux:navlist.item icon="plus" :href="route('designations.create')" :current="request()->routeIs('designations.create')" wire:navigate>{{ __('Create a Designation') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Employees')" class="grid">
+                    <flux:navlist.item icon="users" :href="route('employees.index')" :current="request()->routeIs('employees.index')" wire:navigate>{{ __('List of Employees') }}</flux:navlist.item>
+                    <flux:navlist.item icon="plus" :href="route('employees.create')" :current="request()->routeIs('employees.create')" wire:navigate>{{ __('Create an Employee') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Contracts')" class="grid">
+                    <flux:navlist.item icon="users" :href="route('contracts.index')" :current="request()->routeIs('contracts.index')" wire:navigate>{{ __('List of Contracts') }}</flux:navlist.item>
+                    <flux:navlist.item icon="plus" :href="route('contracts.create')" :current="request()->routeIs('contracts.create')" wire:navigate>{{ __('Create a Contract') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Accounting')" class="grid">
+                    <flux:navlist.item icon="users" :href="route('payrolls.index')" :current="request()->routeIs('payrolls.*')" wire:navigate>{{ __('Payrolls') }}</flux:navlist.item>
+                    <flux:navlist.item icon="users" :href="route('payrolls.index')" :current="request()->routeIs('payrolls.*')" wire:navigate>{{ __('Payroll Payments') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+                <p class ="text-red-500">{{ session('message') }}</p>
             </flux:navlist>
 
             <flux:spacer />
+
+            <flux:dropdown>
+                <flux:profile
+                :name="App\Models\Company::find(session('company_id'))->name??'Select Company'"
+                    :initials="App\Models\Company::find(session('company_id'))->initials??'N/A'"
+                    icon-trailing="chevrons-up-down"
+                />
+                <flux:menu>
+                    @foreach (auth()->user()->companies as $company)
+                        <flux:menu.radio.group>
+                            @livewire('company-switch', ['company' => $company], key($company->id))
+                        </flux:menu.radio.group>
+                    @endforeach
+                </flux:menu>
+            </flux:dropdown>
+            @if(session()->has('errorMsg'))
+            <x-auth-session-status class="text-center text-red-500" :status="session('errorMsg')"></x-auth-session-status>
+            @endif
+
 
             <flux:navlist variant="outline">
                 <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">

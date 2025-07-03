@@ -28,7 +28,7 @@ class Company extends Model
         return $this->throughDepartments()->hasDesignations();
     }
 
-    public function getLogoAttribute(){
+    public function getLogoUrlAttribute(){
         return $this->logo ? asset('storage/'.$this->logo) : asset('images/default-logo.png');
     }
 }

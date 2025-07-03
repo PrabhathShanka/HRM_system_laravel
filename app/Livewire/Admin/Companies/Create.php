@@ -18,7 +18,7 @@ class Create extends Component
             'company.name' => 'required|string|max:255',
             'company.email' => 'required|email|max:255',
             'company.website' => 'required|url|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
@@ -34,8 +34,8 @@ class Create extends Component
             $this->company->logo = $this->logo->store('companies', 'public');
         }
         $this->company->save();
-        session()->flash('message', 'Company created successfully');
-        return $this->redirectIntended(route('companies.index'));
+        session()->flash('success', 'Company created successfully');
+        return $this->redirectIntended(route('companies.index'),true);
     }
 
     public function render()

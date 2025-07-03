@@ -7,26 +7,26 @@ use Livewire\Component;
 
 class Edit extends Component
 {
-    public $departments;
+    public $department;
 
     public function rules()
     {
         return [
-            'departments.name' => 'required|string|max:255',
+            'department.name' => 'required|string|max:255',
         ];
     }
 
     public function mount($id)
     {
-        $this->departments = Department::find($id);
+        $this->department = Department::find($id);
     }
 
     public function save()
     {
         $this->validate();
-        $this->departments->save();
-        session()->flash('message', 'Department edited successfully');
-        return $this->redirectIntended('departments.index');
+        $this->department->save();
+        session()->flash('success', 'Department edited successfully');
+        return $this->redirectIntended(route('departments.index'), true);
     }
     public function render()
     {

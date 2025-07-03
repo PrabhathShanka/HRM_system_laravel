@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Designations;
 
+use App\Models\Department;
 use App\Models\Designation;
 use Livewire\Component;
 
@@ -26,11 +27,13 @@ class Create extends Component
     {
         $this->validate();
         $this->designation->save();
-        session()->flash('message', 'Designation created successfully');
-        return $this->redirectIntended('designations.index');
+        session()->flash('success', 'Designation created successfully');
+        return $this->redirectIntended(route('designations.index'), true);
     }
     public function render()
     {
-        return view('livewire.admin.designations.create');
+        return view('livewire.admin.designations.create', [
+            'departments' => Department::inCompany()->get()
+        ]);
     }
 }
