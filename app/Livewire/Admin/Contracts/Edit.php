@@ -46,7 +46,7 @@ class Edit extends Component
         $this->validate();
         $this->contract->save();
         session()->flash('success', 'Contract edited successfully');
-        return $this->redirectIntended(route('contracts.index'));
+        return $this->redirectIntended(route('contracts.index'), true);
     }
 
     public function render()

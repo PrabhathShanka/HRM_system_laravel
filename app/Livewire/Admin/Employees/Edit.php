@@ -9,32 +9,32 @@ use Livewire\Component;
 
 class Edit extends Component
 {
-     public $employees;
+     public $employee;
     public $department_id;
 
     public function rules()
-    {
+    {info($this->employee);
         return [
-            'employees.name' => 'required|string|max:255',
-            'employees.email' => 'required|email|max:255',
-            'employees.phone' => 'required|string|max:255',
-            'employees.address' => 'required|string|max:255',
-            "employees.department_id" => "required|exists:departments,id",
+            'employee.name' => 'required|string|max:255',
+            'employee.email' => 'required|email|max:255',
+            'employee.phone' => 'required|string|max:255',
+            'employee.address' => 'required|string|max:255',
+            "employee.designation_id" => "required|exists:designations,id",
         ];
     }
 
     public function mount($id)
     {
-        $this->employees =  Employee::find($id);
-        $this->department_id = $this->employees->designation->department_id;
+        $this->employee =  Employee::find($id);
+        $this->department_id = $this->employee->designation->department_id;
     }
 
     public function save()
     {
         $this->validate();
-        $this->employees->save();
+        $this->employee->save();
         session()->flash('success', 'Employee edited successfully');
-        return $this->redirectIntended('employees.index');
+        return $this->redirectIntended(route('employees.index'), true);
     }
     public function render()
     {
