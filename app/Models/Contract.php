@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
+    protected $fillable = ['employee_id', 'designation_id', 'start_date', 'end_date', 'rate_type', 'rate'];
+
+    protected $appends = ['duration'];
+
+    protected $casts = [
+        'start_date',
+        'end_date'
+    ];
     public function designation()
     {
         return $this->belongsTo(Designation::class);
@@ -18,7 +26,6 @@ class Contract extends Model
             $q->inCompany();
         });
     }
-
     public function getDurationAttribute()
     {
         return Carbon::parse($this->start_date)->diffForHumans($this->end_date);
@@ -26,13 +33,18 @@ class Contract extends Model
 
     public function scopeSearchByEmployee($query, $name)
     {
-        return $query->whereHas('employee', function ($q) use ($name){
+        return $query->whereHas('employee', function ($q) use ($name) {
             $q->where('name', 'like', "%$name%");
         });
     }
 
-    public function getTotalEarnings($monthYear){
+    public function getTotalEarnings($monthYear)
+    {
         return $this->rate_type == 'monthly' ? $this->rate : $this->rate * Carbon::parse($monthYear)->daysInMonth;
     }
 
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

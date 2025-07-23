@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Contracts;
 use App\Models\Contract;
 use App\Models\Department;
 use App\Models\Employee;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
 class Edit extends Component
@@ -18,10 +19,10 @@ class Edit extends Component
     public function rules()
     {
         return [
-            'contract.department_id' => 'required',
+            'contract.designation_id' => 'required',
             'contract.employee_id' => 'required',
             'contract.start_date' => 'required|date',
-            'contract.end_date' => 'required|date|after:contract.start_date',
+            'contract.end_date' => 'required|date',
             'contract.rate_type' => 'required',
             'contract.rate' => 'required',
         ];
@@ -44,6 +45,10 @@ class Edit extends Component
     public function save()
     {
         $this->validate();
+        $activeContract = $this->contract->employee->getActiveContract($this->contract->start_date, $this->contract->end_date);
+        if ($activeContract && $activeContract->id != $this->contract->id) {
+            throw ValidationException::withMessages(['contract.start_date' => 'This employee already has a contract.']);
+        }
         $this->contract->save();
         session()->flash('success', 'Contract edited successfully');
         return $this->redirectIntended(route('contracts.index'), true);

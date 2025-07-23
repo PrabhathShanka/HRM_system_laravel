@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Companies;
 
 use App\Models\Company;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -43,3 +44,4 @@ class Create extends Component
         return view('livewire.admin.companies.create');
     }
 }
+

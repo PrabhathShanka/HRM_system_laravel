@@ -22,7 +22,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.admin.contracts.index', [
-            'contracts' => Contract::inCompany()->where('title', 'like', '%' . $this->search . '%')->paginate(10),
+            'contracts' => Contract::inCompany()->searchByEmployee($this->search)->paginate(10),
         ]);
     }
 }

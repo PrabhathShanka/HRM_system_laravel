@@ -13,7 +13,7 @@ class Edit extends Component
     public $department_id;
 
     public function rules()
-    {info($this->employee);
+    {
         return [
             'employee.name' => 'required|string|max:255',
             'employee.email' => 'required|email|max:255',
