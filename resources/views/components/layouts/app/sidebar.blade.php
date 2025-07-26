@@ -20,6 +20,8 @@
                     <flux:navlist.item icon="building-office" :href="route('companies.index')" :current="request()->routeIs('companies.index')" wire:navigate>{{ __('List of Companies') }}</flux:navlist.item>
                     <flux:navlist.item icon="plus" :href="route('companies.create')" :current="request()->routeIs('companies.create')" wire:navigate>{{ __('Create a Company') }}</flux:navlist.item>
                 </flux:navlist.group>
+                @if(session()->has('company_id'))
+
 
                 <flux:navlist.group :heading="__('Departments')" class="grid">
                     <flux:navlist.item icon="users" :href="route('departments.index')" :current="request()->routeIs('departments.index')" wire:navigate>{{ __('List of Departments') }}</flux:navlist.item>
@@ -45,6 +47,7 @@
                     <flux:navlist.item icon="users" :href="route('payrolls.index')" :current="request()->routeIs('payrolls.*')" wire:navigate>{{ __('Payrolls') }}</flux:navlist.item>
                     <flux:navlist.item icon="users" :href="route('payrolls.index')" :current="request()->routeIs('payrolls.*')" wire:navigate>{{ __('Payroll Payments') }}</flux:navlist.item>
                 </flux:navlist.group>
+                        @endif
 
                 <p class ="text-red-500">{{ session('message') }}</p>
             </flux:navlist>

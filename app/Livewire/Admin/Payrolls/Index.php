@@ -23,7 +23,14 @@ class Index extends Component
         ];
     }
 
-    public function generalPayroll()
+    public function viewPayroll($id)
+    {
+        $payroll = Payroll::inCompany()->find($id);
+        $this->redirectIntended(route('payrolls.show', $payroll),true);
+
+    }
+
+    public function generatePayroll()
     {
         $this->validate();
         $date = Carbon::parse($this->monthYear);
@@ -36,7 +43,6 @@ class Index extends Component
             $payroll->year = $date->format('Y');
             $payroll->company_id = session('company_id');
             $payroll->save();
-
 
             foreach (Employee::inCompany()->get() as $employee) {
                 $contract = $employee->getActiveContract($date->startOfMonth()->toDateString(), $date->endOfMonth()->toDateString());
@@ -52,12 +58,13 @@ class Index extends Component
         }
     }
 
+
     public function updatePayroll($id)
     {
         $payroll = Payroll::inCompany()->find($id);
         $payroll->salaries()->delete();
         foreach (Employee::inCompany()->get() as $employee) {
-            $contract = $employee->getActiveContract($payroll->year . '-' . $payroll->month . '-01', $payroll->year . '-' . $payroll->month . '-' . Carbon::parse($payroll->monthYear)->daysInMonth . ' 23:59:59');
+            $contract = $employee->getActiveContract($payroll->year . '-' . $payroll->month . '-01', $payroll->year . '-' . $payroll->month . '-31' . Carbon::parse($payroll->monthYear)->daysInMonth . ' 23:59:59');
             if ($contract) {
                 $payroll->salaries()->create([
                     'employee_id' => $employee->id,
@@ -70,7 +77,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.admin.payrolls.index', [
-            'payrolls' => Payroll::inCompany()->orderBy('year', 'desc')->orderBy('month', 'desc')->paginate(5),
+            'payrolls' => Payroll::where('company_id', session('company_id'))->paginate(5),
         ]);
     }
 }

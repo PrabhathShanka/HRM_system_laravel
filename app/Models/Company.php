@@ -31,4 +31,11 @@ class Company extends Model
     public function getLogoUrlAttribute(){
         return $this->logo ? asset('storage/'.$this->logo) : asset('images/default-logo.png');
     }
+
+    public function scopeForUser($query)
+    {
+        return $query->whereHas('users', function ($q) {
+            $q->where('id', auth()->user()->id);
+        });
+    }
 }

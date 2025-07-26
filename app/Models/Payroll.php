@@ -19,7 +19,7 @@ class Payroll extends Model
 
     public function scopeInCompany($query)
     {
-        return $query->where('company_id', $this->company_id);
+        return $query->where('company_id', session('company_id'));
     }
 
     public function getMonthYearAttribute()
